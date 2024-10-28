@@ -1,0 +1,48 @@
+name: A每4小时运行一次
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # 每 4 小时运行一次
+  workflow_dispatch:  # 允许手动触发工作流
+
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+        steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # 指定你需要的 Python 版本
+
+      - name: Create virtual environment
+        run: |
+          python -m venv venv
+          echo "venv created"
+      
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source venv/bin/activate
+          pip install -r /hub-mirror/requirements.txt
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v1
+    - name: Mirror Github to Gitee
+      uses: ./.
+      with:
+        src: github/6dylan6
+        dst: gitee/dslz666
+        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+        dst_token: ${{ secrets.GITEE_TOKEN }}
+        account_type: org
+        
+        #静态名单（可用于单一仓库同步）
+        static_list: "jdpro"
+        # Only sync normal repo
+        # black_list: 'test'
+        white_list: 'normal,test,empty'
+        force_update: true
+        debug: true
