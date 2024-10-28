@@ -6,44 +6,33 @@ on:
   workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
-  run:
-    name: Run
+  run-hub-mirror:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-          python-version: '3.12'  # 指定你需要的 Python 版本
 
-    - name: Create virtual environment
-      run: |
-          python -m venv venv
-          echo "venv created"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       
-    - name: Activate virtual environment and install dependencies
-      run: |
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Create virtual environment
+        run: |
+          python -m venv venv
+      
+      - name: Activate virtual environment and upgrade pip
+        run: |
           source venv/bin/activate
-          # pip install -r /hub-mirror/requirements.txt
-          pip install -r hub-mirror/requirements.txt  # 使用相对路径
-     # steps:
-    - name: Checkout source code
-      uses: actions/checkout@v1
-    - name: Mirror Github to Gitee
-      uses: ./.
-      with:
-        src: github/6dylan6
-        dst: gitee/dslz666
-        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-        dst_token: ${{ secrets.GITEE_TOKEN }}
-        account_type: org
-        
-        #静态名单（可用于单一仓库同步）
-        static_list: "jdpro"
-        # Only sync normal repo
-        # black_list: 'test'
-        white_list: 'normal,test,empty'
-        force_update: true
-        debug: true
+          pip install --upgrade pip
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          pip install -r hub-mirror/requirements.txt
+      
+      - name: Run Hub Mirror script
+        run: |
+          source venv/bin/activate
+          python hub-mirror/hubmirror.py --src github/6dylan6 --dst gitee/dslz666 --dst-token ${{ secrets.DST_TOKEN }} --account-type org --src-account-type '' --dst-account-type '' --clone-style https --cache-path /github/workspace/hub-mirror-cache --black-list '' --white-list normal,test,empty --static-list jdpro --force-update true --debug true --timeout 30m --mappings '' --lfs false
