@@ -27,7 +27,7 @@ jobs:
       run: |
           source venv/bin/activate
           # pip install -r /hub-mirror/requirements.txt
-          pip install -r /hub-mirror/requirements.txt
+          pip install -r hub-mirror/requirements.txt  # 使用相对路径
      # steps:
     - name: Checkout source code
       uses: actions/checkout@v1
