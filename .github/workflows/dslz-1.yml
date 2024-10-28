@@ -26,7 +26,8 @@ jobs:
     - name: Activate virtual environment and install dependencies
       run: |
           source venv/bin/activate
-          pip install -r /hub-mirror/requirements.txt
+          # pip install -r /hub-mirror/requirements.txt
+          pip install -r /requirements.txt
      # steps:
     - name: Checkout source code
       uses: actions/checkout@v1
