@@ -6,13 +6,25 @@ on:
   workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
-  build:
+  run:
+    name: Run
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Run your script or command
-        run: |
-          echo "Your command here"
+    - name: Checkout source code
+      uses: actions/checkout@v1
+    - name: Mirror Github to Gitee
+      uses: ./.
+      with:
+        src: github/6dylan6
+        dst: gitee/dslz666
+        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+        dst_token: ${{ secrets.GITEE_TOKEN }}
+        account_type: org
+        
+        #静态名单（可用于单一仓库同步）
+        static_list: "jdpro"
+        # Only sync normal repo
+        # black_list: 'test'
+        white_list: 'normal,test,empty'
+        force_update: true
+        debug: true
