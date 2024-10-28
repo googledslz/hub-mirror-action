@@ -35,4 +35,8 @@ jobs:
       - name: Run Hub Mirror script
         run: |
           source venv/bin/activate
+          src: github/6dylan6
+          dst: gitee/dslz666
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
           python hub-mirror/hubmirror.py --src github/6dylan6 --dst gitee/dslz666 --dst-token ${{ secrets.DST_TOKEN }} --account-type org --src-account-type '' --dst-account-type '' --clone-style https --cache-path /github/workspace/hub-mirror-cache --black-list '' --white-list normal,test,empty --static-list jdpro --force-update true --debug true --timeout 30m --mappings '' --lfs false
